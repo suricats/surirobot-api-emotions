@@ -1,0 +1,46 @@
+image: python:3.6
+stages:
+  - test
+  - build
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
+
+cache:
+  paths:
+    - .cache/
+    - venv/
+
+test:
+  stage: test
+  before_script:
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install -r requirements.txt
+  script:
+    - pytest --cov=api
+
+test_externalapi:
+  before_script:
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install -r requirements.txt
+  script:
+    - pytest -m externalapi
+  only:
+    - schedules
+
+build_docker_image:
+  image: docker:stable
+  services:
+    - docker:dind
+  stage: build
+  script:
+    - docker build -t api-emotions .
+    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest api-emotions
+  only:
+    - master
+  tags:
+    - docker
