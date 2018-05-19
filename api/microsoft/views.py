@@ -1,7 +1,7 @@
 import logging
 from flask import Blueprint, request, jsonify
 
-from api.exceptions import BadHeaderException, MissingHeaderException, APIException
+from api.exceptions import BadHeaderException, MissingHeaderException, BaseAPIException, UnknownAPIException
 from api.microsoft.helpers import microsoft_analyse_picture
 from api.microsoft.constants import SUPPORTED_FORMATS
 
@@ -22,10 +22,10 @@ def analyse():
 
     try:
         res = microsoft_analyse_picture(file)
-    except APIException as e:
+    except BaseAPIException as e:
         return jsonify({'errors': [e.to_dict()]}), e.status_code
     except Exception as e:
         logger.error(e)
-        return jsonify({'errors': [APIException().to_dict()]}), 500
+        return jsonify({'errors': [UnknownAPIException().to_dict()]}), 500
 
     return jsonify(res), 200

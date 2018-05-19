@@ -1,4 +1,4 @@
-class APIException(Exception):
+class BaseAPIException(Exception):
     status_code = 500
 
     def __init__(self, code='api_error', msg='Unexpected error'):
@@ -13,37 +13,44 @@ class APIException(Exception):
         }
 
 
-class ExternalAPIException(APIException):
+class UnknownAPIException(BaseAPIException):
+    status_code = 500
+
+    def __init__(self):
+        super().__init__()
+
+
+class ExternalAPIException(BaseAPIException):
     status_code = 503
 
-    def __init__(self, api_name='External'):
+    def __init__(self, api_name='External API'):
         super().__init__(
             'external_api_error',
-            '{} API is not working properly'.format(api_name)
+            '{} is not working properly.'.format(api_name)
         )
 
 
-class APIThrottlingException(APIException):
+class APIThrottlingException(BaseAPIException):
     status_code = 429
 
-    def __init__(self, api_name='External'):
+    def __init__(self, api_name='External API'):
         super().__init__(
             'api_throttling',
-            '{} API is not working properly'.format(api_name)
+            '{} needs to cool down.'.format(api_name)
         )
 
 
-class InvalidCredentialsException(APIException):
+class InvalidCredentialsException(BaseAPIException):
     status_code = 401
 
-    def __init__(self, api_name='External'):
+    def __init__(self, api_name='External API'):
         super().__init__(
             'invalid_credentials',
-            '{} API credentials are not valid.'.format(api_name)
+            '{} credentials are not valid.'.format(api_name)
         )
 
 
-class OperationFailedException(APIException):
+class OperationFailedException(BaseAPIException):
     def __init__(self):
         super().__init__(
             'operation_failed',
@@ -51,7 +58,7 @@ class OperationFailedException(APIException):
         )
 
 
-class MissingParameterException(APIException):
+class MissingParameterException(BaseAPIException):
     status_code = 400
 
     def __init__(self, parameter):
@@ -61,36 +68,36 @@ class MissingParameterException(APIException):
         )
 
 
-class BadParameterException(APIException):
+class BadParameterException(BaseAPIException):
     status_code = 400
 
     def __init__(self, parameter, valid_values=None):
         msg = '{} is not correct.'.format(parameter)
         if valid_values:
-            msg = msg + ' Valid values are {}'.format(', '.join(valid_values))
+            msg = msg + ' Valid values are: {}'.format(', '.join(valid_values))
         super().__init__(
             'bad_parameter',
             msg
         )
 
 
-class MissingHeaderException(APIException):
+class MissingHeaderException(BaseAPIException):
     status_code = 400
 
-    def __init__(self, parameter):
+    def __init__(self, header):
         super().__init__(
             'missing_header',
-            '{} is missing.'.format(parameter)
+            '{} is missing.'.format(header)
         )
 
 
-class BadHeaderException(APIException):
+class BadHeaderException(BaseAPIException):
     status_code = 400
 
-    def __init__(self, parameter, valid_values=None):
-        msg = '{} is not correct.'.format(parameter)
+    def __init__(self, header, valid_values=None):
+        msg = '{} is not correct.'.format(header)
         if valid_values:
-            msg = msg + ' Valid values are {}'.format(', '.join(valid_values))
+            msg = msg + ' Valid values are: {}'.format(', '.join(valid_values))
         super().__init__(
             'bad_header',
             msg

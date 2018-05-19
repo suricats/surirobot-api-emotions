@@ -3,6 +3,8 @@ import requests
 from api.exceptions import ExternalAPIException, InvalidCredentialsException, APIThrottlingException
 from api.microsoft.constants import MICROSOFT_API_KEY, MICROSOFT_API_URL
 
+API_NAME = 'Microsoft Face API'
+
 
 def microsoft_analyse_picture(file):
     url = MICROSOFT_API_URL + '/detect?returnFaceId=true&returnFaceAttributes=emotion'
