@@ -16,7 +16,9 @@ def analyse():
         return jsonify({'errors': [MissingHeaderException('Content-Type').to_dict()]}), MissingHeaderException.status_code
 
     if content_type not in SUPPORTED_FORMATS:
-        return jsonify({'errors': [BadHeaderException('Content-Type', valid_values=SUPPORTED_FORMATS).to_dict()]}), BadHeaderException.status_code
+        return jsonify({
+            'errors': [BadHeaderException('Content-Type', valid_values=SUPPORTED_FORMATS).to_dict()]
+        }), BadHeaderException.status_code
 
     file = request.data
 
