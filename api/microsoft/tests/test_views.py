@@ -1,8 +1,8 @@
 import json
-from mock import patch, Mock
+from unittest.mock import patch
 from flask import url_for
 
-from api.exceptions import BadHeaderException, MissingHeaderException
+from api.exceptions import BadHeaderException, MissingHeaderException, UnknownAPIException
 from api.microsoft.constants import SUPPORTED_FORMATS
 
 
@@ -48,3 +48,19 @@ def test_analyse_picture_missing_content_type(mock_microsoft_analyse_picture, cl
     assert res.status_code == 400
     assert sorted(json.loads(res.data).items()) == sorted(expected_result.items())
     assert mock_microsoft_analyse_picture.call_count == 0
+
+
+@patch('api.microsoft.views.microsoft_analyse_picture', autospec=True)
+def test_analyse_picture_unknown_exception(mock_microsoft_analyse_picture, client, happy_file):
+    mock_microsoft_analyse_picture.side_effect = Exception()
+
+    res = client.post(
+        url_for('emo_microsoft.analyse'),
+        content_type='image/jpeg',
+        data=happy_file
+    )
+
+    expected_result = {'errors': [UnknownAPIException().to_dict()]}
+
+    assert res.status_code == 500
+    assert sorted(json.loads(res.data).items()) == sorted(expected_result.items())

@@ -1,5 +1,5 @@
 import pytest
-from mock import patch, Mock
+from unittest.mock import patch, Mock
 
 from api.microsoft.helpers import microsoft_analyse_picture, requests
 from api.exceptions import APIThrottlingException, InvalidCredentialsException, ExternalAPIException
