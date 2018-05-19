@@ -16,7 +16,7 @@ def index():
 @app.route('/docs/openapi.yaml')
 def swagger_file():
     try:
-        with open('./docs/openapi.yaml', 'r') as content:
-            return Response(content, mimetype="text/yaml")
+        content = open('./docs/openapi.yaml', 'r')
+        return Response(content, mimetype="text/yaml")
     except FileNotFoundError:
         return Response(status=404)
