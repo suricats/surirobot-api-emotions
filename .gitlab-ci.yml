@@ -111,7 +111,7 @@ mirror_to_github:
     - git remote rm github || true
     - git remote add github $GITHUB_DEPLOY_URL
     - git fetch github
-    - git push github master
+    - git push github HEAD:master --force
   only:
     - master
   except:
