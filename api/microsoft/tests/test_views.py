@@ -2,7 +2,7 @@ import json
 from unittest.mock import patch
 from flask import url_for
 
-from api.exceptions import BadHeaderException, MissingHeaderException, UnknownAPIException
+from api.exceptions import BadHeaderException, MissingHeaderException, UnknownAPIException, OperationFailedException
 from api.microsoft.constants import SUPPORTED_FORMATS
 
 
@@ -61,6 +61,22 @@ def test_analyse_picture_unknown_exception(mock_microsoft_analyse_picture, clien
     )
 
     expected_result = {'errors': [UnknownAPIException().to_dict()]}
+
+    assert res.status_code == 500
+    assert sorted(json.loads(res.data).items()) == sorted(expected_result.items())
+
+
+@patch('api.microsoft.views.microsoft_analyse_picture', autospec=True)
+def test_analyse_picture_known_exception(mock_microsoft_analyse_picture, client, happy_file):
+    mock_microsoft_analyse_picture.side_effect = OperationFailedException()
+
+    res = client.post(
+        url_for('emo_microsoft.analyse'),
+        content_type='image/jpeg',
+        data=happy_file
+    )
+
+    expected_result = {'errors': [OperationFailedException().to_dict()]}
 
     assert res.status_code == 500
     assert sorted(json.loads(res.data).items()) == sorted(expected_result.items())

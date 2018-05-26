@@ -1,6 +1,6 @@
 # API Emotions
 
-[![pipeline status](https://gitlab.kozlek.net/surirobot/api-emotions/badges/master/pipeline.svg)](https://gitlab.kozlek.net/surirobot/api-emotions/commits/master)
+[![pipeline status](https://gitlab.kozlek.net/surirobot/api-emotions/badges/master/pipeline.svg)](https://gitlab.kozlek.net/surirobot/api-emotions/commits/dev)
 [![coverage report](https://gitlab.kozlek.net/surirobot/api-emotions/badges/master/coverage.svg)](https://gitlab.kozlek.net/surirobot/api-emotions/commits/master)
 [![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg)](https://docs.python.org/3/whatsnew/3.6.html)
 
