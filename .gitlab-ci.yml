@@ -57,7 +57,7 @@ test_docker_image:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $KOZLEK_REGISTRY
   script:
     - docker pull $DOCKER_IMAGE:ci
-    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint "pytest --cov=api" $DOCKER_IMAGE:ci
+    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest "--cov=api" $DOCKER_IMAGE:ci
   tags:
     - docker
   only:
