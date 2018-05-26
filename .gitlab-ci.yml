@@ -1,15 +1,13 @@
 image: python:3.6
 stages:
-  - test
   - build
+  - test
+  - release
+  - deploy
 
 variables:
-  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
-
-cache:
-  paths:
-    - .cache/
-    - venv/
+  KOZLEK_REGISTRY: registry.kozlek.net
+  DOCKER_IMAGE: $KOZLEK_REGISTRY/surirobot/api-emotions
 
 test:
   stage: test
@@ -20,27 +18,112 @@ test:
     - pip install -r requirements.txt
   script:
     - pytest --cov=api
-
-test_externalapi:
-  before_script:
-    - pip install virtualenv
-    - virtualenv venv
-    - source venv/bin/activate
-    - pip install -r requirements.txt
-  script:
-    - pytest -m externalapi
-  only:
+  variables:
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
+  cache:
+    paths:
+      - .cache/
+      - venv/
+  except:
     - schedules
+    - staging
+    - master
 
 build_docker_image:
+  stage: build
   image: docker:stable
   services:
     - docker:dind
-  stage: build
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $KOZLEK_REGISTRY
   script:
-    - docker build -t api-emotions .
-    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest api-emotions
-  only:
-    - master
+    - docker pull $DOCKER_IMAGE:ci || true
+    - docker build --cache-from $DOCKER_IMAGE:ci --tag $DOCKER_IMAGE:ci .
+    - docker push $DOCKER_IMAGE:ci
   tags:
     - docker
+  only:
+    - staging
+    - master
+  except:
+    - schedules
+
+test_docker_image:
+  stage: test
+  image: docker:stable
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $KOZLEK_REGISTRY
+  script:
+    - docker pull $DOCKER_IMAGE:ci
+    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest $DOCKER_IMAGE:ci --cov=api -m "not externalapi"
+  tags:
+    - docker
+  only:
+    - staging
+  except:
+    - schedules
+
+test_docker_image_full:
+  stage: test
+  image: docker:stable
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $KOZLEK_REGISTRY
+  script:
+    - docker pull $DOCKER_IMAGE:ci
+    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest $DOCKER_IMAGE:ci --cov=api
+  tags:
+    - docker
+  only:
+    - master
+  except:
+    - schedules
+
+publish_docker_image:
+  stage: release
+  image: docker:stable
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $KOZLEK_REGISTRY
+  script:
+    - docker pull $DOCKER_IMAGE:ci
+    - docker tag $DOCKER_IMAGE:ci $DOCKER_IMAGE:latest
+    - docker push $DOCKER_IMAGE:latest
+  tags:
+    - docker
+  only:
+    - master
+  except:
+    - schedules
+
+mirror_to_github:
+  stage: release
+  script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$GITHUB_DEPLOY_KEY")
+    - git remote add github $GITHUB_DEPLOY_URL
+    - git push github master
+  only:
+    - master
+  except:
+    - schedules
+
+test_externalapi:
+  stage: test
+  image: docker:stable
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $KOZLEK_REGISTRY
+  script:
+    - docker pull $DOCKER_IMAGE:latest
+    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest $DOCKER_IMAGE:ci -m externalapi
+  tags:
+    - docker
+  only:
+    - schedules
