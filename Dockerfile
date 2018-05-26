@@ -1,9 +1,15 @@
-FROM python:3.6
+FROM python:3.6-alpine
 
-COPY ./requirements.txt /requirements.txt
-RUN pip install --no-cache-dir -r /requirements.txt
+RUN mkdir -p /app
+WORKDIR /app
 
-COPY . /app
+COPY requirements.txt /app/
+RUN apk update && \
+    apk add --virtual .build-deps gcc musl-dev && \
+    pip install --no-cache-dir -r requirements.txt && \
+    apk --purge del .build-deps
+
+COPY api wsgi.py docs /app/
 WORKDIR /app
 
 EXPOSE 8000/tcp

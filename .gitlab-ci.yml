@@ -11,7 +11,7 @@ cache:
     - .cache/
     - venv/
 
-test:
+test_dev:
   stage: test
   before_script:
     - pip install virtualenv
@@ -20,6 +20,20 @@ test:
     - pip install -r requirements.txt
   script:
     - pytest --cov=api
+  except:
+    - master
+
+test_master:
+  stage: test
+  before_script:
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install -r requirements.txt
+  script:
+    - pytest --cov=api -m ''
+  only:
+    - master
 
 test_externalapi:
   before_script:
