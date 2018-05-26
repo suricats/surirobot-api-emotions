@@ -38,7 +38,7 @@ build_docker_image:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $KOZLEK_REGISTRY
   script:
     - docker pull $DOCKER_IMAGE:ci || true
-    - docker build --cache-from $CONTAINER_IMAGE:ci --tag $DOCKER_IMAGE:ci .
+    - docker build --cache-from $DOCKER_IMAGE:ci --tag $DOCKER_IMAGE:ci .
     - docker push $DOCKER_IMAGE:ci
   tags:
     - docker
