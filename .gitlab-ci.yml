@@ -107,7 +107,7 @@ mirror_to_github:
     - mkdir -p ~/.ssh
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$GITHUB_DEPLOY_KEY")
-    - ssh-keyscan -H [hostname] > ~/.ssh/known_hosts
+    - ssh-keyscan -H github.com > ~/.ssh/known_hosts
     - git remote rm github || true
     - git remote add github $GITHUB_DEPLOY_URL
     - git fetch github
