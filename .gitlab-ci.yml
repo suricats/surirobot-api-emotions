@@ -57,7 +57,7 @@ test_docker_image:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $KOZLEK_REGISTRY
   script:
     - docker pull $DOCKER_IMAGE:ci
-    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest "--cov=api" $DOCKER_IMAGE:ci
+    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest $DOCKER_IMAGE:ci --cov=api -m "not externalapi"
   tags:
     - docker
   only:
@@ -74,7 +74,7 @@ test_docker_image_full:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $KOZLEK_REGISTRY
   script:
     - docker pull $DOCKER_IMAGE:ci
-    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest "--cov=api -m ''" $DOCKER_IMAGE:ci
+    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest $DOCKER_IMAGE:ci --cov=api
   tags:
     - docker
   only:
@@ -121,8 +121,8 @@ test_externalapi:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $KOZLEK_REGISTRY
   script:
-    - docker pull $DOCKER_IMAGE:ci
-    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest $DOCKER_IMAGE:ci
+    - docker pull $DOCKER_IMAGE:latest
+    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest $DOCKER_IMAGE:ci -m externalapi
   tags:
     - docker
   only:
