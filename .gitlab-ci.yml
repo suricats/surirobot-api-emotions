@@ -5,6 +5,8 @@ stages:
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
+  KOZLEK_REGISTRY: registry.kozlek.net
+  DOCKER_IMAGE: $KOZLEK_REGISTRY/surirobot/api-emotions
 
 cache:
   paths:
@@ -51,10 +53,14 @@ build_docker_image:
   services:
     - docker:dind
   stage: build
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $KOZLEK_REGISTRY
   script:
-    - docker build -t api-emotions .
-    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest api-emotions
+    - docker build -t DOCKER_IMAGE:latest .
+    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest $DOCKER_IMAGE:latest
+    - docker push $DOCKER_IMAGE:latest
   only:
     - master
+    - staging
   tags:
     - docker
