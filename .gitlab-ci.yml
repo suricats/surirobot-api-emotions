@@ -104,9 +104,12 @@ mirror_to_github:
   stage: release
   script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - mkdir -p ~/.ssh
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$GITHUB_DEPLOY_KEY")
-    - git remote add github $GITHUB_DEPLOY_URL || true
+    - ssh-keyscan -H [hostname] > ~/.ssh/known_hosts
+    - git remote rm github || true
+    - git remote add github $GITHUB_DEPLOY_URL
     - git fetch github
     - git push github master
   only:
