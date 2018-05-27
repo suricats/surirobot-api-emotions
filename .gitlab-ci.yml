@@ -117,6 +117,23 @@ mirror_to_github:
   except:
     - schedules
 
+deploy_production:
+  stage: deploy
+  script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - mkdir -p ~/.ssh
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$PROD_DEPLOY_KEY")
+    - ssh-keyscan -H hermod.kozlek.net > ~/.ssh/known_hosts
+    - ssh $PROD_USER@$PROD_HOST
+    - cd /opt/hermod/docker/surirobot/api-emotions
+    - docker-compose pull && docker-compose stop && docker-compose up -d
+  when: manual
+  only:
+    - master
+  except:
+    - schedules
+
 test_externalapi:
   stage: test
   image: docker:stable
