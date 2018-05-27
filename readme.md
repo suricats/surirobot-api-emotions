@@ -2,7 +2,9 @@
 
 [![pipeline status](https://gitlab.kozlek.net/surirobot/api-emotions/badges/master/pipeline.svg)](https://gitlab.kozlek.net/surirobot/api-emotions/commits/dev)
 [![coverage report](https://gitlab.kozlek.net/surirobot/api-emotions/badges/master/coverage.svg)](https://gitlab.kozlek.net/surirobot/api-emotions/commits/master)
-[![PyPI - Python Version](https://img.shields.io/badge/python-3.6-blue.svg)](https://docs.python.org/3/whatsnew/3.6.html)
+[![PyPI - Python Version](https://img.shields.io/badge/python-3.6-green.svg)](https://docs.python.org/3/whatsnew/3.6.html)
+[![Docker Layers](https://images.microbadger.com/badges/image/surirobot/api-emotions.svg)](https://hub.docker.com/r/surirobot/api-emotions/)
+[![Docker version](https://images.microbadger.com/badges/version/surirobot/api-emotions.svg)](https://hub.docker.com/r/surirobot/api-emotions/)
 
 This API provides all the necessary endpoints to give the `emotions recognition` capability to Surirobot. 
 
@@ -16,7 +18,15 @@ This API provides all the necessary endpoints to give the `emotions recognition`
 * Python3
 * Virtualenvwrapper 
 
-## Installation 
+## Installation
+
+### Using Docker
+
+```shell
+docker run -e MICROSOFT_API_KEY=<YOUR_API_KEY> surirobot/api-emotions
+```
+
+### From source 
 
 * Clone repository 
 * Create virtualenv
@@ -41,12 +51,7 @@ nano .env
 ./app.py
 ```
 
-* Run the production server 
-```shell
-gunicorn -w 4 -b 127.0.0.1:5000 wsgi:app
-```
-
 ## Docs
 
-The Openapi spec and a postman collection are available in the `doc` folder.
+The Openapi spec and a postman collection are available in the `docs` folder.
 You can render the documentation by pointing your browser at the url given by the server.
