@@ -126,7 +126,7 @@ test_externalapi:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $KOZLEK_REGISTRY
   script:
     - docker pull $DOCKER_IMAGE:latest
-    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest $DOCKER_IMAGE:ci -m externalapi
+    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest $DOCKER_IMAGE:ci --cov=api -m externalapi
   tags:
     - docker
   only:
