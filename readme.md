@@ -18,7 +18,15 @@ This API provides all the necessary endpoints to give the `emotions recognition`
 * Python3
 * Virtualenvwrapper 
 
-## Installation 
+## Installation
+
+### Using Docker
+
+```shell
+docker run -e MICROSOFT_API_KEY=<YOUR_API_KEY> surirobot/api-emotions
+```
+
+### From source 
 
 * Clone repository 
 * Create virtualenv
@@ -43,12 +51,7 @@ nano .env
 ./app.py
 ```
 
-* Run the production server 
-```shell
-gunicorn -w 4 -b 127.0.0.1:5000 wsgi:app
-```
-
 ## Docs
 
-The Openapi spec and a postman collection are available in the `doc` folder.
+The Openapi spec and a postman collection are available in the `docs` folder.
 You can render the documentation by pointing your browser at the url given by the server.
