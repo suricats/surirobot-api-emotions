@@ -24,11 +24,11 @@ def microsoft_analyse_picture(file):
         data = res.json()
         try:
             emotions = data[0]['faceAttributes']['emotion']
-        except KeyError as e:
-            raise OperationFailedException() from e
+        except (KeyError, IndexError):
+            return {'emotion': None}
 
         if not emotions:
-            raise OperationFailedException()
+            return {'emotion': None}
 
         emo = ''
         max_percent = 0
@@ -46,4 +46,5 @@ def microsoft_analyse_picture(file):
     elif res.status_code == 429:
         raise APIThrottlingException(api_name='Microsoft')
     else:
-        raise ExternalAPIException(api_name='Microsoft')
+        print(res.status_code)
+        raise ExternalAPIException(api_name=res.status_code)

@@ -46,16 +46,16 @@ def test_microsoft_analyse_picture_unknown(mock_post, happy_file):
 def test_microsoft_analyse_picture_empty_emotion_field(mock_post, happy_file):
     mock_post.return_value = Mock(status_code=200, json=lambda: [{'faceAttributes': {'emotion': {}}}])
 
-    with pytest.raises(OperationFailedException):
-        microsoft_analyse_picture(happy_file)
+    res = microsoft_analyse_picture(happy_file)
+    assert res == {'emotion': None}
 
 
 @patch.object(requests, 'post', autospec=True)
 def test_microsoft_analyse_picture_incorrect_return(mock_post, happy_file):
     mock_post.return_value = Mock(status_code=200, json=lambda: [{}])
 
-    with pytest.raises(OperationFailedException):
-        microsoft_analyse_picture(happy_file)
+    res = microsoft_analyse_picture(happy_file)
+    assert res == {'emotion': None}
 
 
 @pytest.mark.externalapi
