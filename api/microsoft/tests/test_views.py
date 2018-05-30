@@ -78,5 +78,5 @@ def test_analyse_picture_known_exception(mock_microsoft_analyse_picture, client,
 
     expected_result = {'errors': [OperationFailedException().to_dict()]}
 
-    assert res.status_code == 500
+    assert res.status_code == 422
     assert sorted(json.loads(res.data).items()) == sorted(expected_result.items())

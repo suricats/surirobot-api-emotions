@@ -1,6 +1,6 @@
 import requests
 
-from api.exceptions import ExternalAPIException, InvalidCredentialsException, APIThrottlingException
+from api.exceptions import ExternalAPIException, InvalidCredentialsException, APIThrottlingException, OperationFailedException
 from api.microsoft.constants import MICROSOFT_API_KEY, MICROSOFT_API_URL
 
 API_NAME = 'Microsoft Face API'
@@ -24,11 +24,11 @@ def microsoft_analyse_picture(file):
         data = res.json()
         try:
             emotions = data[0]['faceAttributes']['emotion']
-        except Exception as e:
-            raise ExternalAPIException(api_name='Microsoft') from e
+        except KeyError as e:
+            raise OperationFailedException() from e
 
         if not emotions:
-            raise ExternalAPIException(api_name='Microsoft')
+            raise OperationFailedException()
 
         emo = ''
         max_percent = 0

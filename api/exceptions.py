@@ -51,10 +51,12 @@ class InvalidCredentialsException(BaseAPIException):
 
 
 class OperationFailedException(BaseAPIException):
+    status_code = 422
+
     def __init__(self):
         super().__init__(
             'operation_failed',
-            'API failed to process your request. Try again.'
+            'API failed to process your request.'
         )
 
 
