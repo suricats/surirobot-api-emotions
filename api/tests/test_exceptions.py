@@ -63,14 +63,14 @@ def test_exception_invalid_credentials_exception():
 def test_exception_operation_failed_exception():
     expected_result = {
         'code': 'operation_failed',
-        'msg': 'API failed to process your request. Try again.'
+        'msg': 'API failed to process your request.'
     }
 
     with pytest.raises(OperationFailedException) as e:
         raise OperationFailedException
     e = e.value
 
-    assert e.status_code == 500
+    assert e.status_code == 422
     assert sorted(e.to_dict().items()) == sorted(expected_result.items())
 
 
