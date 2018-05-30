@@ -17,6 +17,9 @@ def get_url():
         global MICROSOFT_API_URL
         MICROSOFT_API_URL = os.environ['MICROSOFT_API_URL']
         assert MICROSOFT_API_URL
+    except KeyError:
+        logger.error('MICROSOFT_API_URL must be defined in your environment !')
+        sys.exit(-1)
     except AssertionError:
         logger.error('MICROSOFT_API_URL cannot be blank !')
         sys.exit(-1)
