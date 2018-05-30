@@ -6,6 +6,7 @@ stages:
   - deploy
 
 variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
   KOZLEK_REGISTRY: registry.kozlek.net
   DOCKER_IMAGE: $KOZLEK_REGISTRY/surirobot/api-emotions
 
@@ -18,8 +19,6 @@ test:
     - pip install -r requirements.txt
   script:
     - pytest --cov=api
-  variables:
-    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache"
   cache:
     paths:
       - .cache/
@@ -57,7 +56,7 @@ test_docker_image:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $KOZLEK_REGISTRY
   script:
     - docker pull $DOCKER_IMAGE:ci
-    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest $DOCKER_IMAGE:ci --cov=api -m "not externalapi"
+    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY -e MICROSOFT_API_URL=$MICROSOFT_API_URL --entrypoint pytest $DOCKER_IMAGE:ci --cov=api -m "not externalapi"
   tags:
     - docker
   only:
@@ -74,7 +73,7 @@ test_docker_image_full:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $KOZLEK_REGISTRY
   script:
     - docker pull $DOCKER_IMAGE:ci
-    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest $DOCKER_IMAGE:ci --cov=api
+    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY -e MICROSOFT_API_URL=$MICROSOFT_API_URL --entrypoint pytest $DOCKER_IMAGE:ci --cov=api
   tags:
     - docker
   only:
@@ -119,15 +118,20 @@ mirror_to_github:
 
 deploy_production:
   stage: deploy
+  tags:
+    - deploy
   script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - mkdir -p ~/.ssh
     - eval $(ssh-agent -s)
-    - ssh-add <(echo "$PROD_DEPLOY_KEY")
-    - ssh-keyscan -H hermod.kozlek.net > ~/.ssh/known_hosts
-    - ssh $PROD_USER@$PROD_HOST
-    - cd /opt/hermod/docker/surirobot/api-emotions
-    - docker-compose pull && docker-compose stop && docker-compose up -d
+    - echo -e "$SSH_CONFIG" > ~/.ssh/config
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - pip install fabric3
+    - fab production deploy:docker_user=gitlab-ci-token,docker_passwd=$CI_JOB_TOKEN
+  cache:
+    paths:
+      - .cache/
+      - venv/
   when: manual
   only:
     - master
@@ -143,7 +147,7 @@ test_externalapi:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $KOZLEK_REGISTRY
   script:
     - docker pull $DOCKER_IMAGE:latest
-    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY --entrypoint pytest $DOCKER_IMAGE:ci --cov=api -m externalapi
+    - docker run -e MICROSOFT_API_KEY=$MICROSOFT_API_KEY -e MICROSOFT_API_URL=$MICROSOFT_API_URL --entrypoint pytest $DOCKER_IMAGE:ci --cov=api -m externalapi
   tags:
     - docker
   only:
