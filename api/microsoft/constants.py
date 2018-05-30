@@ -8,8 +8,18 @@ SUPPORTED_FORMATS = [
     'image/jpeg'
 ]
 
-MICROSOFT_API_URL = 'https://westcentralus.api.cognitive.microsoft.com/face/v1.0'
+MICROSOFT_API_URL = ''  # https://westcentralus.api.cognitive.microsoft.com/face/v1.0
 MICROSOFT_API_KEY = ''
+
+
+def get_url():
+    try:
+        global MICROSOFT_API_URL
+        MICROSOFT_API_URL = os.environ['MICROSOFT_API_URL']
+        assert MICROSOFT_API_URL
+    except AssertionError:
+        logger.error('MICROSOFT_API_URL cannot be blank !')
+        sys.exit(-1)
 
 
 def get_api_keys():
@@ -25,4 +35,5 @@ def get_api_keys():
         sys.exit(-1)
 
 
+get_url()
 get_api_keys()
