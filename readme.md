@@ -13,10 +13,12 @@ This API provides all the necessary endpoints to give the `emotions recognition`
 * Extract emotion from picture
   * Microsoft Face API
 
+  
 ## Requirements
 
-* Python3
-* Virtualenvwrapper 
+* Python3 
+* Virtualenvwrapper ```pip install virtualenvwrapper```
+* If you have some trouble with the command ```workon``` see : https://stackoverflow.com/questions/29900090/virtualenv-workon-doesnt-work
 
 ## Installation
 
