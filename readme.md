@@ -42,11 +42,14 @@ pip install -r requirements.txt
 ```
 
 
+## Configure the environment file
 * Configure .env
 ```shell
 cp .env.example .env
-nano .env
 ```
+If you want to use the default environment
+- Fill only the ```REMOTE_DATA_LOGIN```  and ```REMOTE_DATA_PASSWD``` fields
+- Run the command : ```tools/get-env```
   
 * Run the dev server 
 ```shell
