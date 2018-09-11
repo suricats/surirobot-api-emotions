@@ -13,17 +13,20 @@ This API provides all the necessary endpoints to give the `emotions recognition`
 * Extract emotion from picture
   * Microsoft Face API
 
+  
 ## Requirements
 
-* Python3
-* Virtualenvwrapper 
+* Python3 
+* Virtualenvwrapper ```pip install virtualenvwrapper```
+* If you have some trouble with the command ```workon``` see : https://stackoverflow.com/questions/29900090/virtualenv-workon-doesnt-work
 
 ## Installation
 
 ### Using Docker
 
 ```shell
-docker run -e MICROSOFT_API_KEY=<YOUR_API_KEY> -P surirobot/api-emotions
+docker build . -t api-emotions
+docker run -e MICROSOFT_API_KEY=<YOUR_API_KEY> -e MICROSOFT_API_URL=<API_URL> -p 8000:8000 api-emotions
 ```
 
 ### From source 
@@ -40,11 +43,14 @@ pip install -r requirements.txt
 ```
 
 
+## Configure the environment file
 * Configure .env
 ```shell
 cp .env.example .env
-nano .env
 ```
+If you want to use the default environment
+- Fill only the ```REMOTE_DATA_LOGIN```  and ```REMOTE_DATA_PASSWD``` fields
+- Run the command : ```tools/get-env```
   
 * Run the dev server 
 ```shell
