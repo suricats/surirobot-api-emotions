@@ -25,7 +25,8 @@ This API provides all the necessary endpoints to give the `emotions recognition`
 ### Using Docker
 
 ```shell
-docker run -e MICROSOFT_API_KEY=<YOUR_API_KEY> -P surirobot/api-emotions
+docker build . -t api-emotions
+docker run -e MICROSOFT_API_KEY=<YOUR_API_KEY> -e MICROSOFT_API_URL=<API_URL> -p 8000:8000 api-emotions
 ```
 
 ### From source 
