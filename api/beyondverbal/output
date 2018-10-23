@@ -1,0 +1,105 @@
+{
+    "recordingId": "a7f75c2b-f34e-4793-8e6f-fbb79bb87480", 
+    "result": {
+        "analysisSegments": [
+            {
+                "analysis": {
+                    "Arousal": {
+                        "Group": "neutral", 
+                        "Score": "89.00", 
+                        "Value": "53.00"
+                    }, 
+                    "Temper": {
+                        "Group": "ambiguous", 
+                        "Score": "0.00", 
+                        "Value": "-1.00"
+                    }, 
+                    "Valence": {
+                        "Group": "neutral", 
+                        "Score": "89.00", 
+                        "Value": "53.00"
+                    }
+                }, 
+                "duration": 10000, 
+                "end": 10000, 
+                "offset": 0
+            }, 
+            {
+                "analysis": {
+                    "Arousal": {
+                        "Group": "neutral", 
+                        "Score": "88.00", 
+                        "Value": "54.00"
+                    }, 
+                    "Mood": {
+                        "Composite": {
+                            "Primary": {
+                                "Id": 29, 
+                                "Phrase": "Ambition born out of strong conviction."
+                            }, 
+                            "Secondary": {
+                                "Id": 314, 
+                                "Phrase": "Talkativeness, extroversion."
+                            }
+                        }, 
+                        "Group11": {
+                            "Primary": {
+                                "Id": 6, 
+                                "Phrase": "Leadership, Charisma"
+                            }, 
+                            "Secondary": {
+                                "Id": 6, 
+                                "Phrase": "Leadership, Charisma"
+                            }
+                        }, 
+                        "Group21": {
+                            "Primary": {
+                                "Id": 18, 
+                                "Phrase": "motivation"
+                            }, 
+                            "Secondary": {
+                                "Id": 11, 
+                                "Phrase": "friendliness"
+                            }
+                        }
+                    }, 
+                    "Temper": {
+                        "Group": "medium", 
+                        "Score": "62.00", 
+                        "Value": "61.00"
+                    }, 
+                    "Valence": {
+                        "Group": "neutral", 
+                        "Score": "81.00", 
+                        "Value": "56.00"
+                    }
+                }, 
+                "duration": 10000, 
+                "end": 15000, 
+                "offset": 5000
+            }
+        ], 
+        "analysisSummary": {
+            "AnalysisResult": {
+                "Arousal": {
+                    "Mean": "53.50", 
+                    "Mode": "neutral", 
+                    "ModePct": "100.00"
+                }, 
+                "Temper": {
+                    "Mean": "61.00", 
+                    "Mode": "medium", 
+                    "ModePct": "100.00"
+                }, 
+                "Valence": {
+                    "Mean": "54.50", 
+                    "Mode": "neutral", 
+                    "ModePct": "100.00"
+                }
+            }
+        }, 
+        "duration": "17502.13", 
+        "sessionStatus": "Done"
+    }, 
+    "status": "success"
+}

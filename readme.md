@@ -61,3 +61,9 @@ If you want to use the default environment
 
 The Openapi spec and a postman collection are available in the `docs` folder.
 You can render the documentation by pointing your browser at the url given by the server.
+
+## Beyond Verbal API
+
+The input file should be formated by script located in dir /scripts/
+exemple:
+./convert_wav your_file.wav

@@ -31,5 +31,5 @@ def getAnalysis(API_Key,WavPath):
         return r.json()
 
 
-data = getAnalysis("755df2e5-10d6-41d1-8f12-3e1b34325261","samples/collectif_fr.wav")
+data = getAnalysis("755df2e5-10d6-41d1-8f12-3e1b34325261","samples/output.wav")
 print(json.dumps(data, sort_keys=True, indent=4))
