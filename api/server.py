@@ -1,10 +1,11 @@
 from flask import Flask, redirect, Response
 from flask_swagger_ui import get_swaggerui_blueprint
 from api.microsoft.views import emo_microsoft
-
+from api.beyond_verbal.views import emo_beyond_verbal
 app = Flask(__name__)
 
 app.register_blueprint(emo_microsoft, url_prefix='/api/microsoft')
+app.register_blueprint(emo_beyond_verbal, url_prefix='/api/beyond_verbal')
 app.register_blueprint(get_swaggerui_blueprint('/docs', '/docs/openapi.yaml'), url_prefix='/docs')
 
 

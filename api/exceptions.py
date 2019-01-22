@@ -104,3 +104,11 @@ class BadHeaderException(BaseAPIException):
             'bad_header',
             msg
         )
+class TokenExpiredOrInvalidException(BaseAPIException):
+    status_code = 498
+
+    def __init__(self, code='498', msg='Unexpected error'):
+        super().__init__(
+            code,
+            msg
+        )
