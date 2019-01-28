@@ -20,7 +20,7 @@ def beyond_verbal_analyse_voice(file):
         cert_reqs='CERT_REQUIRED',
         ca_certs=certifi.where())
     """
-    requests.packages.urllib3.disable_warnings()
+    #requests.packages.urllib3.disable_warnings()
 
     res = requests.post(BEYONDVERBAL_TOKEN_URL,data={"grant_type":"client_credentials","apiKey":BEYONDVERBAL_API_KEY})
     token = res.json()['access_token']
@@ -29,15 +29,10 @@ def beyond_verbal_analyse_voice(file):
     pp = requests.post(BEYONDVERBAL_API_URL + "/recording/start",json={"dataFormat": { "type":"WAV" }},verify=False,headers=headers)
     if pp.status_code == 200:
         recordingId = pp.json()['recordingId']
-        new_file = file.split('.')[0] + '-format.wav'
-        ff = FFmpeg(
-            inputs={file: None},
-            outputs={new_file: '-acodec pcm_s16le -ac 1 -ar 8000'}
-        )
-        ff.run()
+        
 
-        with open(new_file, 'rb') as wavdata:
-            r = requests.post(BEYONDVERBAL_API_URL + "/recording/"+recordingId,data=wavdata, verify=False, headers=headers)
+        #with open(new_file, 'rb') as wavdata:
+        r = requests.post(BEYONDVERBAL_API_URL + "/recording/"+recordingId,data=file, verify=False, headers=headers)
         
         print (json.dumps(r.json(), indent=4, sort_keys=True))
         return r.json()
